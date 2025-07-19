@@ -1,27 +1,24 @@
-Dieses Repository demonstriert eine Vorgehensweise zur Erkennung von Anomalien in Brauereidaten. Ziel ist es, Messwerte (z.\u00a0B. Druck oder Temperatur) mithilfe mehrerer Verfahren zu pr\u00fcfen und die einzelnen Ergebnisse \u00fcber eine Mehrheitsabstimmung zusammenzuf\u00fchren.
+## Optimierung der Anomalieerkennung in Brauereidaten mithilfe von Mehrheitsabstimmung
 
-## Datenbasis
-Die Notebookbeispiele verwenden CSV-Dateien, die Zeitstempel und Messreihen enthalten. Diese Daten werden im Notebook direkt eingelesen. Eigene Dateien k\u00f6nnen \u00fcber den Pfad in der zweiten Zelle eingebunden werden.
+Dieses Projekt demonstriert ein Verfahren zur Detektion von Ausreißern in Prozessdaten einer Brauerei. Mehrere Algorithmen werden parallel ausgeführt und ihre Ergebnisse über ein Mehrheitsvotum zusammengeführt. Ziel ist es, die Erkennungsgenauigkeit gegenüber Einzelverfahren zu erhöhen.
 
-## Eingesetzte Verfahren
-Vier verschiedene Methoden zur Anomalieerkennung werden kombiniert:
+## Verwendete Algorithmen
 
-1. **Facebook Prophet** zur Vorhersage des Trends und Bestimmung von Konfidenzintervallen.
-2. **Drei-Sigma-Regel** (Berechnung des erwarteten Wertebereichs \u00fcber Mittelwert und Standardabweichung).
-3. **Einfacher gleitender Durchschnitt (SMA)** mit Bollinger\u2013\u00e4hnlichen B\u00e4ndern.
-4. **Exponentieller gleitender Durchschnitt (EMA)** mit vergleichbaren B\u00e4ndern.
+* **Facebook Prophet** zur Prognose und zum Vergleich der tatsächlichen Messwerte mit den Vorhersageintervallen
+* **Drei-Sigma-Regel** (Mean ± 3  σ) zur einfachen Ausreißerdetektion
+* **Simple Moving Average (SMA)** mit konfigurierbarem Fenster
+* **Exponential Moving Average (EMA)** als gewichteter gleitender Durchschnitt
 
-Jede Methode kennzeichnet Messpunkte als \u201eAnomalie\u201c oder \u201eNormalfall\u201c. Anschlie\u00dfend wird pro Zeitstempel gez\u00e4hlt, wie viele Verfahren eine Anomalie erkannt haben. \u00dcberschreitet dieser Anteil ein vorgegebenes Quorum (im Notebook 50\u00a0%), wird der Punkt endg\u00fcltig als Anomalie markiert.
+Jeder Algorithmus kennzeichnet Datenpunkte als „Anomalie“ oder „Normalfall“. In einem anschließenden Schritt wird für jeden Zeitpunkt gezählt, wie viele Verfahren eine Anomalie melden. Liegt der Anteil über einem festgelegten Schwellwert, wird der Datenpunkt als Anomalie klassifiziert.
 
-## Nutzung
-Das gesamte Vorgehen ist im Notebook `Anomlie_Voting_v1.ipynb` nachvollziehbar. Zur Ausf\u00fchrung wird eine Python-Umgebung mit den dort importierten Bibliotheken ben\u00f6tigt (u.\u00a0a. `pandas`, `numpy`, `fbprophet`, `seaborn`). Die Ergebnisse werden grafisch dargestellt und k\u00f6nnen optional als CSV gespeichert werden.
+## Ausführen des Notebooks
 
-1. Notebook \u00f6ffnen und die Datenquelle in Zelle&nbsp;2 anpassen.
-2. Alle Zellen ausf\u00fchren, um die Zwischenergebnisse der einzelnen Methoden zu erzeugen.
-3. Die finale Tabelle `anomaly_tmp` enth\u00e4lt f\u00fcr jede Messung die Anzahl der positiven Stimmen und den Abstimmungsprozentsatz.
+1. Python 3 sowie die benötigten Bibliotheken installieren, zum Beispiel
+   ```bash
+   pip install numpy pandas holoviews matplotlib altair seaborn fbprophet
+   ```
+2. Das Notebook `Anomlie_Voting_v1.ipynb` in Jupyter öffnen.
+3. Pfad zum Datensatz anpassen (z.B. `D:\THOWL\Anwendungsprojekt\Daten\2022_06_15\filt_1.csv`).
+4. Alle Zellen ausführen, um die Detektion und die Mehrheitsabstimmung durchzuführen.
 
-## Dateien
-* `Anomlie_Voting_v1.ipynb` – Schrittweise Analyse und Mehrheitsabstimmung
-* `Anomalieerkennung_bei_Brauereidaten_Ver_2.pdf` – begleitende Ausarbeitung
-
-Diese vereinfachte Implementierung dient als Anschauungsbeispiel. Sie kann f\u00fcr eigene Datens\u00e4tze angepasst und erweitert werden.
+Die Ergebnisse werden als Tabellen und Diagramme im Notebook ausgegeben. Auffällige Zeitpunkte können optional in einer CSV-Datei gespeichert werden.
